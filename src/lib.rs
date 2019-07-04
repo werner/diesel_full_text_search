@@ -104,10 +104,27 @@ mod dsl {
         }
     }
 
+    pub trait TsRumExtensions: Expression<SqlType=TsVector> + Sized {
+        fn distance<T: AsExpression<TsQuery>>(self, other: T) -> Distance<Self, T::Expression> {
+            Distance::new(self, other.as_expression())
+        }
+
+        fn left_distance<T: AsExpression<TsVector>>(self, other: T) -> LeftDistance<Self, T::Expression> {
+            LeftDistance::new(self, other.as_expression())
+        }
+
+        fn right_distance<T: AsExpression<TsVector>>(self, other: T) -> RightDistance<Self, T::Expression> {
+            RightDistance::new(self, other.as_expression())
+        }
+    }
+
     impl<T: Expression<SqlType=TsVector>> TsVectorExtensions for T {
     }
 
     impl<T: Expression<SqlType=TsQuery>> TsQueryExtensions for T {
+    }
+
+    impl<T: Expression<SqlType=TsVector>> TsRumExtensions for T {
     }
 }
 
